@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { getRecords, deleteRecord } from '../utils/storage';
+import { getRecords } from '../utils/storage';
 import { MACARON_COLORS, getAccountColorMap, getAccountColor } from '../utils/colors';
 
 const CalendarView = ({ onRefresh, onRecordClick }) => {
@@ -38,19 +38,7 @@ const CalendarView = ({ onRefresh, onRecordClick }) => {
     return getAccountColorMap(records);
   }, [records]);
 
-  const handleDelete = async (id, e) => {
-    e.stopPropagation();
-    if (window.confirm('确定要删除这条记录吗？')) {
-      try {
-        await deleteRecord(id);
-        await loadRecords();
-        if (onRefresh) onRefresh();
-      } catch (error) {
-        console.error('Error deleting record:', error);
-        alert('删除失败，请重试');
-      }
-    }
-  };
+  // 删除功能已移至编辑页面，日历中不再提供删除按钮
 
   const handleRecordClick = (record) => {
     if (onRecordClick) {
@@ -200,7 +188,7 @@ const CalendarView = ({ onRefresh, onRecordClick }) => {
               return (
                 <div
                   key={index}
-                  className={`min-h-[120px] p-2 border-r border-b border-slate-100 flex flex-col gap-1 transition-colors hover:bg-slate-50 ${
+                  className={`min-h-[120px] p-1 sm:p-2 border-r border-b border-slate-100 flex flex-col gap-1 transition-colors hover:bg-slate-50 ${
                     !dayInfo.isCurrentMonth ? 'bg-slate-50/50 text-slate-400' : ''
                   }`}
                 >
@@ -213,7 +201,7 @@ const CalendarView = ({ onRefresh, onRecordClick }) => {
                       return (
                         <div
                           key={record.id}
-                          className="px-2 py-1 text-xs rounded-md border truncate shadow-sm cursor-pointer relative group"
+                          className="px-1 sm:px-2 py-1 text-xs rounded-md border shadow-sm cursor-pointer break-words"
                           onClick={() => handleRecordClick(record)}
                           title={`${record.accountName} - ${record.product} (¥${parseFloat(record.revenue || 0).toFixed(2)})`}
                           style={{
@@ -222,20 +210,10 @@ const CalendarView = ({ onRefresh, onRecordClick }) => {
                             borderColor: accountColor.border
                           }}
                         >
-                          <div className="truncate">
+                          <div className="break-words whitespace-normal">
                             <span className="font-semibold">{record.accountName}</span>
                             <span className="ml-1 opacity-80">{record.product}</span>
                           </div>
-                          <button
-                            className="absolute top-0.5 right-0.5 w-4 h-4 rounded bg-white/80 text-xs opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
-                            onClick={(e) => handleDelete(record.id, e)}
-                            title="删除"
-                            style={{
-                              color: accountColor.text
-                            }}
-                          >
-                            ×
-                          </button>
                         </div>
                       );
                     })}

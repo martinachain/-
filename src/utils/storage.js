@@ -1,12 +1,12 @@
 import { supabase } from './supabaseClient';
 
-// 从 Supabase 获取所有记录，按日期倒序排列
+// 从 Supabase 获取所有记录，按日期倒序排列（NULL 值放在最后）
 export const getRecords = async () => {
   try {
     const { data, error } = await supabase
       .from('records')
       .select('*')
-      .order('date', { ascending: false });
+      .order('date', { ascending: false, nullsFirst: false });
     
     if (error) {
       console.error('Error fetching records:', error);
@@ -26,7 +26,7 @@ export const addRecord = async (record) => {
     const newRecord = {
       account_name: record.accountName,
       product: record.product,
-      date: record.date,
+      date: record.date || null, // 允许日期为空
       revenue: parseFloat(record.revenue) || 0,
       account_color: record.accountColor || null
     };
@@ -81,7 +81,7 @@ export const updateRecord = async (id, updatedData) => {
     const updateData = {
       account_name: updatedData.accountName,
       product: updatedData.product,
-      date: updatedData.date,
+      date: updatedData.date || null, // 允许日期为空
       revenue: parseFloat(updatedData.revenue) || 0,
       account_color: updatedData.accountColor || null
     };

@@ -19,8 +19,8 @@ const AddRecordPage = ({ onBack, onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.accountName || !formData.product || !formData.date) {
-      alert('请填写所有必填字段');
+    if (!formData.accountName || !formData.product) {
+      alert('请填写账号名和推荐产品');
       return;
     }
     try {
@@ -100,7 +100,7 @@ const AddRecordPage = ({ onBack, onSuccess }) => {
 
           <div className="space-y-2">
             <label htmlFor="date" className="block text-sm font-medium text-slate-700">
-              推广日期 <span className="text-red-500">*</span>
+              推广日期 <span className="text-slate-400 text-xs">(可选，不填将加入待办)</span>
             </label>
             <input
               type="date"
@@ -108,7 +108,6 @@ const AddRecordPage = ({ onBack, onSuccess }) => {
               name="date"
               value={formData.date}
               onChange={handleChange}
-              required
               className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
           </div>

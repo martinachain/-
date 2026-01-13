@@ -275,16 +275,16 @@ const CalendarView = ({ onRefresh, onRecordClick }) => {
     <div className="w-full">
       {/* 左右布局容器：移动端垂直，桌面端水平 */}
       <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
-        {/* 左侧栏：待办事项 */}
-        {pendingRecords.length > 0 && (
-          <div className="w-full lg:w-80 xl:w-96 flex-shrink-0">
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col lg:h-[calc(100vh-12rem)] lg:sticky lg:top-24">
-              <h3 className="text-base sm:text-lg font-bold text-slate-800 mb-4 flex items-center gap-2 flex-shrink-0">
-                <span className="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0"></span>
-                <span>待办事项 ({pendingRecords.length})</span>
-              </h3>
-              <div className="flex-1 overflow-y-auto space-y-3 pr-2 -mr-2 min-h-0">
-                {pendingRecords.map(record => {
+        {/* 左侧栏：待办事项 - 始终显示 */}
+        <div className="w-full lg:w-80 xl:w-96 flex-shrink-0">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex flex-col lg:h-[calc(100vh-12rem)] lg:sticky lg:top-24">
+            <h3 className="text-base sm:text-lg font-bold text-slate-800 mb-4 flex items-center gap-2 flex-shrink-0">
+              <span className="w-2 h-2 rounded-full bg-amber-500 flex-shrink-0"></span>
+              <span>待办事项 ({pendingRecords.length})</span>
+            </h3>
+            <div className="flex-1 overflow-y-auto space-y-3 pr-2 -mr-2 min-h-0">
+              {pendingRecords.length > 0 ? (
+                pendingRecords.map(record => {
                   const accountColor = getAccountColor(record.accountName, accountColorMap);
                   return (
                     <PendingRecordItem
@@ -295,11 +295,17 @@ const CalendarView = ({ onRefresh, onRecordClick }) => {
                       onMoveToDate={handleMoveToDate}
                     />
                   );
-                })}
-              </div>
+                })
+              ) : (
+                <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <div className="text-4xl mb-3">📋</div>
+                  <p className="text-sm text-slate-500 mb-1">暂无待办事项</p>
+                  <p className="text-xs text-slate-400">添加记录时不填写日期即可加入待办</p>
+                </div>
+              )}
             </div>
           </div>
-        )}
+        </div>
 
         {/* 右侧内容区：账号过滤 + 日历 */}
         <div className="flex-1 min-w-0 space-y-6">
